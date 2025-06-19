@@ -5,7 +5,6 @@ go 1.23.5
 require (
 	github.com/gagliardetto/solana-go v1.12.0
 	google.golang.org/grpc v1.73.0
-	google.golang.org/protobuf v1.36.6
 )
 
 require (
@@ -40,4 +39,6 @@ require (
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250324211829-b45e905df463 // indirect
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 )

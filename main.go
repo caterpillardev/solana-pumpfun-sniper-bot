@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -15,7 +16,7 @@ import (
 	"github.com/gagliardetto/solana-go/programs/system"
 	"github.com/gagliardetto/solana-go/rpc"
 
-	pb "sniperc/proto"
+	pb "sniperc/sniperc/proto/geyserpb"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -29,7 +30,7 @@ var (
 const (
 	LamportsPerSOL           = 1_000_000_000
 	TotalSupply              = 1_000_000_000
-	MARKET_CAP_THRESHOLD_USD = 8000.00
+	MARKET_CAP_THRESHOLD_USD = 8000.00 // sniper which new tokens above $8000 market cap
 	BUY_AMOUNT_SOL           = 0.001
 )
 
@@ -104,25 +105,26 @@ func main() {
 
 	client := pb.NewGeyserClient(conn)
 	ctx := context.Background()
-
 	voteFilter := false
 	failedFilter := false
+
+	//subscribe to pump_fun program
 	subReq := &pb.SubscribeRequest{
 		Transactions: map[string]*pb.SubscribeRequestFilterTransactions{
 			"pump_fun_subscription": {
-				Vote:           &voteFilter,
-				Failed:         &failedFilter,
+				Vote:           voteFilter,
+				Failed:         failedFilter,
 				AccountInclude: []string{PUMP_FUN_PROGRAM_ID},
 			},
 		},
 		TransactionsStatus: map[string]*pb.SubscribeRequestFilterTransactions{
 			"pump_fun_status": {
-				Vote:           &voteFilter,
-				Failed:         &failedFilter,
+				Vote:           voteFilter,
+				Failed:         failedFilter,
 				AccountInclude: []string{PUMP_FUN_PROGRAM_ID},
 			},
 		},
-		Commitment: pb.CommitmentLevel_PROCESSED.Enum(),
+		Commitment: pb.CommitmentLevel_PROCESSED,
 	}
 
 	stream, err := client.Subscribe(ctx)
@@ -136,8 +138,20 @@ func main() {
 	log.Println("✅ Subscribed. Waiting for 'create' transactions...")
 	log.Printf("🎯 Monitoring for tokens with market cap >= $%.2f", MARKET_CAP_THRESHOLD_USD)
 
-	solanaRpcClient := rpc.New(rpc.MainNetBeta_RPC)
+	// Use custom Solana RPC endpoint, configurable via env var
+	rpcEndpoint := os.Getenv("SOLANA_RPC_ENDPOINT")
+	if rpcEndpoint == "" {
+		apiKey := os.Getenv("HELIUS_API_KEY")
+		if apiKey == "" {
+			log.Fatal("Missing HELIUS_API_KEY or SOLANA_RPC_ENDPOINT")
+		}
+		rpcEndpoint = fmt.Sprintf("https://pomaded-lithotomies-xfbhnqagbt-dedicated.helius-rpc.com/?api-key=%s", apiKey)
+	}
 
+	log.Println("Connecting to Solana RPC:", rpcEndpoint)
+	solanaRpcClient := rpc.New(rpcEndpoint)
+
+	//Monitor for new mint transactions
 	for {
 		resp, err := stream.Recv()
 		if err == io.EOF {
@@ -150,7 +164,7 @@ func main() {
 
 		if txUpdate := resp.GetTransaction(); txUpdate != nil {
 			tx := txUpdate.GetTransaction()
-			message := tx.Transaction.GetMessage()
+			message := tx.GetMessage()
 
 			staticAccountKeys := message.GetAccountKeys()
 			loadedWritableKeys := tx.Meta.GetLoadedWritableAddresses()

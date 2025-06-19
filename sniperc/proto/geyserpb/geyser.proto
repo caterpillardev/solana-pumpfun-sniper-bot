@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package sniperc.proto;
+
+option go_package = "sniperc/proto/geyserpb";
+
+service Geyser {
+  rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse);
+}
+message SubscribeRequestFilterTransactions {
+  bool Vote = 1;
+  bool Failed = 2;
+  repeated string AccountInclude = 3;
+}
+
+message SubscribeRequest {
+  map<string, SubscribeRequestFilterTransactions> Transactions = 1;
+  map<string, SubscribeRequestFilterTransactions> TransactionsStatus = 2;
+  CommitmentLevel Commitment = 3;
+}
+
+enum CommitmentLevel {
+  PROCESSED = 0;
+  CONFIRMED = 1;
+  FINALIZED = 2;
+}
+
+message SubscribeResponse {
+  TransactionUpdate transaction = 1;
+}
+
+message InnerInstruction{
+repeated Instruction instructions = 1;
+}
+
+message Meta {
+repeated bytes loaded_writable_addresses = 1;
+repeated bytes loaded_readonly_addresses = 2;
+repeated InnerInstruction inner_instructions = 3;
+}
+
+message Instruction{
+  uint32 ProgramIdIndex = 1;
+  bytes Data = 2;
+  repeated uint32 Accounts = 3;
+}
+
+message Message{
+repeated bytes account_keys= 1;
+repeated Instruction instructions = 2;
+}
+
+
+message Transaction{
+Message message =1;
+Meta meta =2;
+}
+
+
+message TransactionUpdate {
+  Transaction Transaction = 1;
+  // ...
+}
+
