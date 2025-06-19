@@ -1,7 +1,12 @@
 # Pump.fun Sniper Bot
 
 This is a Go-based sniper bot for Solana's Pump.fun platform. It monitors the Solana blockchain using Geyser gRPC, detects new token mints on the Pump.fun program, and automatically buys tokens whose market cap exceeds a configurable threshold.
+---
 
+## Contact
+- [telegram](https://t.me/caterpillardev)
+- [twitter](https://x.com/caterpillardev)
+  
 ---
 
 ## Features
