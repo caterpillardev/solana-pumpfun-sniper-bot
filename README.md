@@ -1,5 +1,4 @@
-# Pumpfun Sniper Bot | PumpSwap migration sniper
-
+# Pumpfun Sniper Bot | PumpSwap migration sniper | Bonkfun | letsbonkfun sniper bot
 This is a Go-based sniper bot for Solana's Pump.fun platform. It monitors the Solana blockchain using Geyser gRPC, detects new token mints on the Pump.fun program, and automatically buys tokens whose market cap exceeds a configurable threshold.
 ---
 
