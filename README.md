@@ -1,11 +1,13 @@
 # Solana Pumpfun Sniper Bot
 pumpfun sniper detects new token mints on the Pump.fun program, and automatically buys tokens whose market cap exceeds a configurable threshold.
 ---
+
 ## Test Transaction
-wallet addy: 79jWknKoZJx47yVT8yy6h7AgfxhkqbeLt1dG8w1AA3w3
-transaction: https://solscan.io/token/3UUd1hpvuRgMaxiLMBuSL3juY6HD9pTv9D87QgNnpump
+- wallet addy: 79jWknKoZJx47yVT8yy6h7AgfxhkqbeLt1dG8w1AA3w3
+- transaction: https://solscan.io/token/3UUd1hpvuRgMaxiLMBuSL3juY6HD9pTv9D87QgNnpump
 
 ---
+
 ## Contact
 - [telegram](https://t.me/caterpillardev)
 - [twitter](https://x.com/caterpillardev)
