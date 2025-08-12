@@ -9,8 +9,8 @@ pumpfun sniper detects new token mints on the Pump.fun program, and automaticall
 ---
 
 ## Contact
-- [telegram](https://t.me/caterpillardev)
-- [twitter](https://x.com/caterpillardev)
+- [telegram](https://t.me/roswellyy)
+- [twitter](https://x.com/roswellyy)
   
 ---
 
